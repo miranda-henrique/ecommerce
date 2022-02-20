@@ -32,6 +32,7 @@ const orderCreateReducer = (state = {}, action) => {
 
 const orderDetailsReducer = (
     state = {
+        loading: true,
         orderItems: [],
         shippingAddress: {},
     },
