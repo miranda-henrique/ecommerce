@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails } from '../actions/orderActions';
+import { getOrderDetails, payOrder } from '../actions/orderActions';
+import { ORDER_PAY_RESET } from '../constants/orderConstants';
+import PayPalCheckoutButton from '../components/PayPalCheckoutButton';
 
 
 const OrderScreen = ({ match }) => {
@@ -15,6 +17,9 @@ const OrderScreen = ({ match }) => {
 
     const orderDetails = useSelector((state) => state.orderDetails);
     const { order, loading, error } = orderDetails;
+
+    const orderPay = useSelector((state) => state.orderPay);
+    const { loading: loadingPay, success: successPay } = orderPay;
 
     if (!loading) {
         const addDecimals = (num) => {
@@ -34,12 +39,26 @@ const OrderScreen = ({ match }) => {
     }
 
     useEffect(() => {
+        if (!order || successPay) {
+            dispatch({
+                type: ORDER_PAY_RESET,
+            });
+
+            dispatch(getOrderDetails(orderId));
+        }
+
         //To get the most recent order, check if there is already an order
         //or if the current order id is different from the one passed in the url
         if (!order || order._id !== orderId) {
             dispatch(getOrderDetails(orderId));
         }
-    }, [order, orderId]);
+    }, [dispatch, order, orderId, successPay]);
+
+    const successPaymentHandler = (order) => {
+        console.log(order);
+
+        dispatch(payOrder(orderId, order));
+    };
 
 
     return loading
@@ -172,6 +191,16 @@ const OrderScreen = ({ match }) => {
                                         <Col>${order.totalPrice}</Col>
                                     </Row>
                                 </ListGroup.Item>
+
+                                {!order.isPaid && (
+                                    <ListGroup.Item>
+                                        {loadingPay && <Loader />}
+                                            <PayPalCheckoutButton
+                                                totalPrice={order.totalPrice}
+                                                orderId={orderId}
+                                            />
+                                    </ListGroup.Item>
+                                )}
 
                             </ListGroup>
                         </Card>

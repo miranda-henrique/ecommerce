@@ -8,7 +8,7 @@ import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 
 //Error handling
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 
 dotenv.config();
@@ -17,14 +17,10 @@ const app = express();
 app.use(express.json());
 
 
-app.use((req, res, next) => {
-    console.log(req.originalUrl);
-    next();
+app.get('/', (request, response) => {
+    res.send('API is running!');
 });
 
-app.get("/", (req, res) => {
-    res.send("API is running!");
-});
 
 //Routes
 app.use('/api/products', productRoutes);
