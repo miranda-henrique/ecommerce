@@ -13,17 +13,16 @@ import {
 
 const router = express.Router();
 
-//POST
+router.route('/')
+    .get(protect, admin, getUsers)
+    .post(registerUser);
+
 router.post('/login', authUser);
 
 //Route
 router.route('/profile')
     .get(protect, getUserProfile)
     .put(protect, updateUserProfile);
-
-router.route('/')
-    .get(protect, admin, getUsers)
-    .post(registerUser);
 
 
 export default router;
