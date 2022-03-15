@@ -3,9 +3,13 @@ import {
     getUserProfile,
     registerUser,
     authUser,
-    updateUserProfile
+    updateUserProfile,
+    getUsers
 } from '../controllers/userController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import {
+    protect,
+    admin,
+} from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,6 +22,7 @@ router.route('/profile')
     .put(protect, updateUserProfile);
 
 router.route('/')
+    .get(protect, admin, getUsers)
     .post(registerUser);
 
 
