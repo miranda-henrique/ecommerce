@@ -119,6 +119,21 @@ const getUsers = asyncHandler(async (request, response) => {
     response.json(users);
 });
 
+// @description Delete user
+// @route
+// @access Private/Admin
+const deleteUser = asyncHandler(async (request, response) => {
+    const user = await User.findById(request.params.id);
+
+    if (user) {
+        await user.remove();
+        response.json({ message: 'User removed' });
+    } else {
+        response.status(404);
+        throw new Error('User not found');
+    }
+});
+
 
 export {
     getUserProfile,
@@ -126,4 +141,5 @@ export {
     authUser,
     updateUserProfile,
     getUsers,
+    deleteUser,
 };
