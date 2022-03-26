@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -70,12 +71,14 @@ const ProductEditScreen = ({ match, history }) => {
             };
 
             const { data } = await axios.post(
-                '/api/upload',
+                '/api/uploads',
                 formData,
                 config
             );
 
-            setImage(data);
+            //Multer was sending back a filepath with backslash.
+            //This 'replace' takes care of it
+            setImage(data.replace(/\\/g, '/'));
             setUploading(false);
 
         } catch (error) {
@@ -126,8 +129,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='name'
                                         placeholder='Enter name'
                                         value={name}
-                                        onChange={(event) => setName(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setName(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='price'>
@@ -136,8 +139,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='number'
                                         placeholder='Enter price'
                                         value={price}
-                                        onChange={(event) => setPrice(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setPrice(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='image'>
@@ -146,16 +149,19 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='text'
                                         placeholder='Enter image url'
                                         value={image}
-                                        onChange={(event) => setImage(event.target.value)}>
-                                    </Form.Control>
-                                    {/* <Form.File
-                                        id='image-file'
-                                        label='Choose File'
-                                        custom
-                                        onChange={uploadFileHandler}>
-                                    </Form.File> */}
-                                    {uploading && <Loader />}
+                                        onChange={(event) => setImage(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
+
+                                <Form.Group>
+                                    <Form.Label>Upload image</Form.Label>
+                                    <Form.Control
+                                        type='file'
+                                        id='image-file'
+                                        onChange={uploadFileHandler}
+                                    ></Form.Control>
+                                </Form.Group>
+                                {uploading && <Loader />}
 
                                 <Form.Group controlId='brand'>
                                     <Form.Label>Brand</Form.Label>
@@ -163,8 +169,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='text'
                                         placeholder='Enter brand'
                                         value={brand}
-                                        onChange={(event) => setBrand(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setBrand(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='countInStock'>
@@ -173,8 +179,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='number'
                                         placeholder='Enter countInStock'
                                         value={countInStock}
-                                        onChange={(event) => setCountInStock(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setCountInStock(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='category'>
@@ -183,8 +189,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='text'
                                         placeholder='Enter category'
                                         value={category}
-                                        onChange={(event) => setCategory(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setCategory(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='description'>
@@ -193,8 +199,8 @@ const ProductEditScreen = ({ match, history }) => {
                                         type='type'
                                         placeholder='Enter description'
                                         value={description}
-                                        onChange={(event) => setDescription(event.target.value)}>
-                                    </Form.Control>
+                                        onChange={(event) => setDescription(event.target.value)}
+                                    ></Form.Control>
                                 </Form.Group>
 
                                 <Button type='submit' variant='primary'>

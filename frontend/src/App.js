@@ -1,4 +1,5 @@
 import React from 'react';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import Header from './components/Header';
@@ -17,7 +18,7 @@ import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import OrderListScreen from './screens/OrderListScreen';
 
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
             <Route path='/admin/user/:id/edit' component={UserEditScreen} />
             <Route path='/admin/productlist' component={ProductListScreen} />
             <Route path='/admin/product/:id/edit' component={ProductEditScreen} />
+            <Route path='/admin/orderlist' component={OrderListScreen} />
           </Container>
         </main>
         <Footer />
