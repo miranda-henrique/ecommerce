@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import morgan from 'morgan';
 
 
 //Routes
@@ -18,9 +19,12 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 
 app.get('/', (request, response) => {
-    res.send('API is running!');
+    response.send('API is running!');
 });
 
 //Routes
