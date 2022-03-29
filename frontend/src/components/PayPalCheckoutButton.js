@@ -9,12 +9,8 @@ const PayPalCheckoutButton = (props) => {
 
     const { totalPrice, orderId } = props;
     //PayPal only accepts payments on local currency. It interprets the value with
-    //a decimal part separated by a dot as USD, so it is important to replace the
-    //dot for a comma or to remove the decimal part entirely for the value to be
-    //interpreted as BRL
-
-    //remove comment below after app is completed
-    const totalPriceBRL = 1;//Math.trunc(totalPrice);
+    //a decimal part separated by a dot as USD. For practical purposes, value is being truncated so as to avoid this problem
+    const totalPriceBRL = Math.trunc(totalPrice);
 
     const successPaymentHandler = (order) => {
         console.log(order);
