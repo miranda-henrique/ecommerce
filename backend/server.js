@@ -23,10 +23,6 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-app.get('/', (request, response) => {
-    response.send('API is running!');
-});
-
 //Routes
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
@@ -36,6 +32,19 @@ app.use('/api/uploads', uploadRoutes);
 //Make 'uploads' folder static
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+//Make 'build' folder static for production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+    app.get('*', (request, response) => {
+        response.sendFile(path.resolve(__dirname, '/frontend', 'build', 'index.html'));
+    });
+} else {
+    app.get('/', (request, response) => {
+        response.send('API is running!');
+    });
+}
 
 //Error handling
 app.use(notFound);
