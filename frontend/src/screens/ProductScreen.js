@@ -4,6 +4,7 @@ import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import Meta from '../components/Meta';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     listProductDetails,
@@ -69,6 +70,7 @@ const ProductScreen = ({ history, match }) => {
                     </Message>
                     : (
                         <>
+                            <Meta title={product.name} />
                             <Row>
                                 <Col md={6}>
                                     <Image
