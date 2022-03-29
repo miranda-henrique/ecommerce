@@ -5,6 +5,10 @@ import Product from '../models/productModel.js';
 // @route GET /api/products
 // @access Public
 const getProducts = asyncHandler(async (request, response) => {
+    const productsPerPage = 10;
+
+    const currentPage = Number(request.query.pageNumber) || 1;
+
     const keyword = request.query.keyword ?
         {
             name: {
@@ -14,9 +18,19 @@ const getProducts = asyncHandler(async (request, response) => {
         }
         : {};
 
-    const products = await Product.find({ ...keyword });
+    const totalProducts = await Product.count({ ...keyword });
 
-    response.json(products);
+    const products = await Product
+        .find({ ...keyword })
+        .limit(productsPerPage)
+        //skip the products shown on previous page
+        .skip(productsPerPage * (currentPage - 1));
+
+    response.json({
+        products,
+        currentPage,
+        numOfPages: Math.ceil(totalProducts / productsPerPage),
+    });
 });
 
 // @description Fetch single product
@@ -118,8 +132,6 @@ const createProductReview = asyncHandler(async (request, response) => {
         const alreadyReviewed = product.reviews.find(review =>
             review.user.toString() === request.user._id.toString());
 
-        console.log(alreadyReviewed);
-
         if (alreadyReviewed) {
             response.status(400);
             throw new Error('Product already reviewed');
@@ -152,6 +164,21 @@ const createProductReview = asyncHandler(async (request, response) => {
     }
 });
 
+// @description Get top rated products
+// @route GET /api/products/top
+// @access Public
+const getTopProducts = asyncHandler(async (request, response) => {
+
+        const products = await Product
+            .find({})
+            //sort rating in ascending order
+            .sort({ rating: -1 })
+            .limit(3);
+
+        response.json(products);
+
+});
+
 
 export {
     getProducts,
@@ -160,4 +187,5 @@ export {
     createProduct,
     updateProduct,
     createProductReview,
+    getTopProducts,
 };

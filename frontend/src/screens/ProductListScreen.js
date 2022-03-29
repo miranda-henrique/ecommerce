@@ -19,7 +19,7 @@ const ProductListScreen = ({ history, match }) => {
     const dispatch = useDispatch();
 
     const productList = useSelector((state) => state.productList);
-    const { loading, error, products, page, pages } = productList;
+    const { loading, error, products, currentPage, numOfPages } = productList;
 
     const productDelete = useSelector((state) => state.productDelete);
     const {
@@ -138,8 +138,8 @@ const ProductListScreen = ({ history, match }) => {
                                 </tbody>
                             </Table>
                             <Paginate
-                                pages={pages}
-                                page={page}
+                                numOfPages={numOfPages}
+                                currentPage={currentPage}
                                 isAdmin={true} />
                         </>
                     )}
